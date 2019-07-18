@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from modp import ModP
+from .modp import ModP
 from ecdsa.ellipticcurve import Point
 
 class Group(ABC):

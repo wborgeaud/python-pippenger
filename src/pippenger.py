@@ -1,7 +1,6 @@
 from sympy import integer_nthroot
 from math import log2, floor
 from itertools import combinations
-from modp import ModP
 
 def subset_of(l):
     return sum(map(lambda r: list(combinations(l, r)), range(1, len(l)+1)), [])
