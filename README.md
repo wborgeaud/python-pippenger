@@ -18,7 +18,7 @@ def naive_multi_exp(gs, es):
     return tmp
 ```
 Here are the results for `p` a prime with 16, 32, 64, 128, 256, and 512 bits:
-[IntModP](images/performance_integers_modp.png)
+![IntModP](images/performance_integers_modp.png)
 We see that Pippenger's method requires far less multiplications. The time required for both methods is more or less the same since function calls in python are really slow.
 
 ### Elliptic curves
@@ -29,5 +29,5 @@ Elliptic curves, however, have a far more expensive addition operation. Therefor
 We perform the same computation as before, this time measuring the time.
 
 Here are the results for the curves SECP256k1, NIST192p, NIST224p, NIST256p, NIST384p, NIST521p:
-[EC](images/performance_ec.png)
+![EC](images/performance_ec.png)
 We see that Pippenger's algorithm is much faster than the naive methods for all elliptic curves. This observation holds in general for groups where the group operation is expensive.
