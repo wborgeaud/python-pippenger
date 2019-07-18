@@ -82,18 +82,8 @@ class TestsEC(unittest.TestCase):
                 N = randint(0, floor(log2(order_cyclic_subgroup)))
                 gs = [g*randint(1, order_cyclic_subgroup) for _ in range(N)]
                 es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
-                with self.subTest(N=N):
+                with self.subTest(curve=curve, N=N):
                     self.assertEqual(Pip.multiexp(gs, es), naive_multi_exp_ec(gs, es))
-            order_cyclic_subgroup, p, gen = get_good_primes(start)
-            G = MultIntModP(p, order_cyclic_subgroup)
-            Pip = Pippenger(G)
-            g = ModP(gen, p)
-            for N in range(floor(log2(order_cyclic_subgroup))):
-                gs = [g**randint(1, order_cyclic_subgroup) for _ in range(N)]
-                es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
-                self.assertEqual(Pip.multiexp(gs, es), naive_multi_exp(gs, es, p))
-            start = order_cyclic_subgroup + 1
-        
 
 if __name__ == '__main__':
     unittest.main()
