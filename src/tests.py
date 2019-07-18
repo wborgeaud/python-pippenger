@@ -33,6 +33,17 @@ def get_good_primes(start):
         p += 1
 
 class StupidTests(unittest.TestCase):
+    def test_different_length(self):
+        order, p = 11, 23
+        G = MultIntModP(p, order)
+        Pip = Pippenger(G)
+        g = ModP(3, p)
+        with self.assertRaisesRegex(Exception, 'Different number of group elements and exponents'):
+            Pip.multiexp([g, g**2],[1])
+        with self.assertRaisesRegex(Exception, 'Different number of group elements and exponents'):
+            Pip.multiexp([g],[1, 2])
+
+
     def test_zero_int_modp(self):
         order, p = 11, 23
         G = MultIntModP(p, order)
