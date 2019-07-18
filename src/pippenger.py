@@ -10,7 +10,7 @@ class Pippenger:
     def __init__(self, group):
         self.G = group
         self.order = group.order
-        self.lamb = len(bin(group.order))-2
+        self.lamb = group.order.bit_length()
     
     # Returns g^(2^j)
     def _pow2powof2(self, g, j):

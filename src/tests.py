@@ -32,13 +32,67 @@ def get_good_primes(start):
                 gen += 1
         p += 1
 
+class StupidTests(unittest.TestCase):
+    def test_zero_int_modp(self):
+        order, p = 11, 23
+        G = MultIntModP(p, order)
+        Pip = Pippenger(G)
+        g = ModP(3, p)
+        for i in range(order):
+            with self.subTest(i=i):
+                self.assertEqual(Pip.multiexp([g**i],[0]), G.unit)
+        self.assertEqual(
+            Pip.multiexp([g**i for i in range(order)],[0 for i in range(order)]), G.unit
+            )
+    
+    def test_zero_ec(self):
+        CURVE = NIST192p
+        G = EC(CURVE)
+        order_cyclic_subgroup = CURVE.order
+        g = CURVE.generator
+        Pip = Pippenger(G)
+        for i in [randint(0,order_cyclic_subgroup) for _ in range(10)]:
+            with self.subTest(i=i):
+                self.assertEqual(Pip.multiexp([i*g],[0]), G.unit)
+        self.assertEqual(
+            Pip.multiexp([i*g for i in [randint(0,order_cyclic_subgroup) for _ in range(10)]],
+                [0 for i in range(10)]),
+            G.unit
+            )
+
+    def test_one_int_modp(self):
+        order, p = 11, 23
+        G = MultIntModP(p, order)
+        Pip = Pippenger(G)
+        g = ModP(3, p)
+        for i in range(order):
+            with self.subTest(i=i):
+                self.assertEqual(Pip.multiexp([g**i],[1]), g**i)
+        self.assertEqual(
+            Pip.multiexp([g for i in range(order)],[1 for i in range(order)]), G.unit
+            )
+    
+    def test_one_ec(self):
+        CURVE = NIST192p
+        G = EC(CURVE)
+        order_cyclic_subgroup = CURVE.order
+        g = CURVE.generator
+        Pip = Pippenger(G)
+        for i in [randint(0,order_cyclic_subgroup) for _ in range(10)]:
+            with self.subTest(i=i):
+                self.assertEqual(Pip.multiexp([i*g],[1]), i*g)
+        self.assertEqual(
+            Pip.multiexp([g for i in range(10)], [1 for i in range(10)]),
+            10*g
+            )
+
 class TestsIntModP(unittest.TestCase):
     def test_all_values_of_N(self):
         order_cyclic_subgroup, p, gen = get_good_primes(2**32)
         G = MultIntModP(p, order_cyclic_subgroup)
         Pip = Pippenger(G)
         g = ModP(gen, p)
-        for N in range(floor(log2(order_cyclic_subgroup))):
+        for N in range(order_cyclic_subgroup.bit_length()):
             gs = [g**randint(1, order_cyclic_subgroup) for _ in range(N)]
             es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
             with self.subTest(N=N):
@@ -51,7 +105,7 @@ class TestsIntModP(unittest.TestCase):
             G = MultIntModP(p, order_cyclic_subgroup)
             Pip = Pippenger(G)
             g = ModP(gen, p)
-            for N in range(floor(log2(order_cyclic_subgroup))):
+            for N in range(order_cyclic_subgroup.bit_length()):
                 gs = [g**randint(1, order_cyclic_subgroup) for _ in range(N)]
                 es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
                 with self.subTest(N=N, order=order_cyclic_subgroup):
@@ -65,7 +119,7 @@ class TestsEC(unittest.TestCase):
         order_cyclic_subgroup = CURVE.order
         g = CURVE.generator
         Pip = Pippenger(G)
-        for N in range(0, floor(log2(order_cyclic_subgroup)), 20):
+        for N in range(0, order_cyclic_subgroup.bit_length(), 20):
             gs = [g*randint(1, order_cyclic_subgroup) for _ in range(N)]
             es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
             with self.subTest(N=N):
@@ -78,8 +132,8 @@ class TestsEC(unittest.TestCase):
             order_cyclic_subgroup = curve.order
             g = curve.generator
             Pip = Pippenger(G)
-            for _ in range(10):
-                N = randint(0, floor(log2(order_cyclic_subgroup)))
+            for _ in range(2):
+                N = randint(0, order_cyclic_subgroup.bit_length())
                 gs = [g*randint(1, order_cyclic_subgroup) for _ in range(N)]
                 es = [randint(1,order_cyclic_subgroup) for _ in range(N)]
                 with self.subTest(curve=curve, N=N):
