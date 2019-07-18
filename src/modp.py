@@ -42,6 +42,10 @@ class ModP:
     def __neg__(self):
         return ModP(self.p - self.x, self.p)
     
+    def __eq__(self, y):
+        return (self.x == y.x) and (self.p == y.p)
+
+    
     def __str__(self):
         return str(self.x)
     def __repr__(self):

@@ -21,6 +21,7 @@ class Pippenger:
 
     # Returns Prod g_i ^ e_i
     def multiexp(self, gs, es):
+        es = [ei%self.G.order for ei in es]
         lamb = self.lamb
         assert len(gs) == len(es)
         N = len(gs)
