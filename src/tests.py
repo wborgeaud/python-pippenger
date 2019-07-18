@@ -1,6 +1,6 @@
-from .modp import ModP
-from .group import MultIntModP, EC
-from .pippenger import Pippenger
+from modp import ModP
+from group import MultIntModP, EC
+from pippenger import Pippenger
 from random import randint
 from ecdsa import SECP256k1, NIST192p, NIST224p, NIST256p, NIST384p, NIST521p
 from ecdsa.ellipticcurve import Point
