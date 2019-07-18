@@ -36,7 +36,7 @@ def benchmark_ec(N, curve):
     return time_pip, time_naive
 
 results = []
-for curve in [SECP256k1, NIST192p, NIST256p, NIST384p, NIST521p]:
+for curve in [SECP256k1, NIST192p, NIST224p, NIST256p, NIST384p, NIST521p]:
     print(curve.name, len(bin(curve.order)))
     for N in range(2, len(bin(curve.order))-2, 1+len(bin(curve.order))//50):
         print(N)
@@ -50,4 +50,4 @@ for curve in [SECP256k1, NIST192p, NIST256p, NIST384p, NIST521p]:
         })
 
 results = pd.DataFrame(results)
-results.to_csv('results_ec.csv')
+results.to_csv('results_ec_224.csv')

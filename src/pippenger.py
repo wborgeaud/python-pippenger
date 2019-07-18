@@ -13,7 +13,7 @@ class Pippenger:
         self.lamb = len(bin(group.order))-2
     
     # Returns g^(2^j)
-    def pow2powof2(self, g, j):
+    def _pow2powof2(self, g, j):
         tmp = g
         for _ in range(j):
             tmp = self.G.square(tmp)
@@ -21,9 +21,15 @@ class Pippenger:
 
     # Returns Prod g_i ^ e_i
     def multiexp(self, gs, es):
+        if len(gs) != len(es):
+            raise Exception('Different number of group elements and exponents')
+
         es = [ei%self.G.order for ei in es]
+
+        if len(gs) == 0:
+            return self.G.unit
+
         lamb = self.lamb
-        assert len(gs) == len(es)
         N = len(gs)
         s = integer_nthroot(lamb//N, 2)[0]+1
         t = integer_nthroot(lamb*N,2)[0]+1
@@ -43,22 +49,23 @@ class Pippenger:
                 tmp1.append(tmp2)
             es_bin.append(tmp1)
         
-        Gs = self.multiexp_bin(
+        Gs = self._multiexp_bin(
                 [gs_bin[i][j] for i in range(N) for j in range(s)],
                 [es_bin[i][j] for i in range(N) for j in range(s)]
                 )
 
         ans2 = Gs[-1]
         for k in range(len(Gs)-2,-1,-1):
-            ans2 = self.pow2powof2(ans2, s)
+            ans2 = self._pow2powof2(ans2, s)
             ans2 = self.G.mult(ans2, Gs[k])
 
         return ans2
         
-    def multiexp_bin(self, gs, es):
+    def _multiexp_bin(self, gs, es):
         assert len(gs) == len(es)
         M = len(gs)
         b = floor( log2(M) - log2(log2(M)) )
+        b = b if b else 1
         subsets = [list(range(i,min(i+b,M))) for i in range(0,M,b)]
         Ts = [{sub: None for sub in subset_of(S)} for S in subsets]
 

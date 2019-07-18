@@ -62,4 +62,4 @@ We see that Pippenger's algorithm is much faster than the naive methods for all 
 ## Where is it useful
 The main application (that I know of) of Pippenger's algorithm is in cryptography. Many cryptographic schemes relying on the Discrete Logarithm assumption (or related ones) perform a multi-exponentiation at some point. 
 
-For example [bulletproofs](https://crypto.stanford.edu/bulletproofs/) make use of multi-exponentiation **because** they are so much faster than aggregating individual exponentiations.
+For example [bulletproofs](https://crypto.stanford.edu/bulletproofs/) make use of multi-exponentiations **because** they are so much faster than aggregating individual exponentiations.
