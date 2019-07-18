@@ -1,5 +1,32 @@
 # python-pippenger
-Python3 implementation of the Pippenger algorithm for fast multi-exponentiation following this [survey by Bootle](pippenger.pdf).
+Python3 implementation of the Pippenger algorithm for fast multi-exponentiation, following this [survey by Bootle](pippenger.pdf).
+
+## Usage
+We use a `Group` class to abstract the group operation and thus make the function usable for any group (or monoid for that matter):
+```python 
+class Group(ABC):
+    def __init__(self, unit, order):
+        self.unit = unit
+        self.order = order
+    @abstractmethod
+    def mult(self, x, y):
+        pass
+    def square(self, x):
+        return self.mult(x, x)
+```
+Then, performing the multi-exponentaition `prod_i=1^N g_i^e_i` in an instance of the `Group` class is easy:
+```python
+isinstance(G, Group) # True
+#gs is a list of elements of G, es a list of integer exponents.
+multiexp = Pippenger(G).multiexp(gs, es) 
+```
+We provide `Group` classes for multiplicative subgroups of modular integers `MultIntModP` and for elliptic curves `EC`:
+```python
+G = MultIntModP(23, 11) # cyclic subgroup of order 11 of Z_23^* 
+gs = [ModP(3,23), ModP(12,23), ModP(6,23)]
+es = [9, 3, 10]
+multiexp = Pippenger(G).multiexp(gs, es) # returns 9
+```
 
 ## Performances
 We provide a benchmark for this algorighm in the case where the group `G` is:
@@ -26,8 +53,13 @@ The number of multiplications (that we'll call additions for elliptic curves) is
 
 Elliptic curves, however, have a far more expensive addition operation. Therefore, the savings in the total number of group operation yields great savings in time too.
 
-We perform the same computation as before, this time measuring the time.
+We use the same setup as before, this time measuring the time.
 
 Here are the results for the curves SECP256k1, NIST192p, NIST224p, NIST256p, NIST384p, NIST521p:
 ![EC](images/performance_ec.png)
 We see that Pippenger's algorithm is much faster than the naive methods for all elliptic curves. This observation holds in general for groups where the group operation is expensive.
+
+## Where is it useful
+The main application (that I know of) of Pippenger's algorithm is in cryptography. Many cryptographic schemes relying on the Discrete Logarithm assumption (or related ones) perform a multi-exponentiation at some point. 
+
+For example [bulletproofs](https://crypto.stanford.edu/bulletproofs/) make use of multi-exponentiation **because** they are so much faster than aggregating individual exponentiations.

@@ -7,7 +7,7 @@ axs = axs.ravel()
 for i,bits in enumerate(df.bits.unique()):
     sub_df = df.loc[df.bits==bits]
     sub_df.plot('N',['NaiveMults', 'PipMults'], ax=axs[i])
-    axs[i].set_title('{}-bits prime'.format(bits))
+    axs[i].set_title('{}-bit prime'.format(bits))
     axs[i].set_xlabel('N')
     axs[i].set_ylabel('# of multiplications')
 plt.savefig('performance_integers_modp.png', bbox_inches='tight')
