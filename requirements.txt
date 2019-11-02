@@ -2,7 +2,7 @@ certifi==2019.6.16
 chardet==3.0.4
 codecov==2.0.15
 coverage==4.5.3
-ecdsa==0.13.2
+ecdsa==0.13.3
 idna==2.8
 mpmath==1.1.0
 requests==2.22.0
