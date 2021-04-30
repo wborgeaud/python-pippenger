@@ -7,4 +7,4 @@ idna==2.8
 mpmath==1.1.0
 requests==2.22.0
 sympy==1.4
-urllib3==1.25.3
+urllib3==1.25.8
